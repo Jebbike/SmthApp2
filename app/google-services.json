@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "227204240048",
+    "project_id": "sealmel",
+    "storage_bucket": "sealmel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227204240048:android:5a5523479991686422a175",
+        "android_client_info": {
+          "package_name": "melbet.malbet.hispone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227204240048-nvqcqlbq6o93rfc2tbk7cct91uisr1oa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2Q5oo-6RkiLFGvYDcXP21dRB-xZp4MFo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "227204240048-nvqcqlbq6o93rfc2tbk7cct91uisr1oa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
