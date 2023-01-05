@@ -13,10 +13,14 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
+
 public class BlankActivity extends AppCompatActivity {
     private static final String URL_KEY = "url";
     private static final String URL_KEY_DEFAULT = "";
     private static final String TAG = "NavigateActivity";
+    public FirebaseRemoteConfig remoteConfig;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,12 +30,17 @@ public class BlankActivity extends AppCompatActivity {
         if (redirect(pref))
             return;
 
-        getApp().getRemoteConfig().fetch().addOnCompleteListener(x -> {
+        remoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setMinimumFetchIntervalInSeconds(3600)
+                .build();
+        remoteConfig.setConfigSettingsAsync(configSettings);
+
+        remoteConfig.fetchAndActivate().addOnCompleteListener(x -> {
             if (x.isSuccessful()) {
                 Log.d(TAG, "Firebase Remote config Fetch Succeeded");
-                getApp().getRemoteConfig().activate();
                 pref.edit().remove(URL_KEY).apply();
-                String url = pref.getString(URL_KEY, getApp().getRemoteConfig().getString(URL_KEY));
+                String url = pref.getString(URL_KEY, remoteConfig.getString(URL_KEY));
                 switchActivity(url);
             } else {
                 Log.d(TAG, "Firebase Remote config Fetch failed");
