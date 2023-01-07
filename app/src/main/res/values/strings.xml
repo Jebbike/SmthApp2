@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Мелбет</string>
+    <string name="exception_text_example">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."</string>
+    <string name="smth_wrong">Ой, что-то не так...</string>
+    <string name="no_inet">Для продолжения необходимо подключение к сети</string>
+    <string name="firebase_error">Для продолжения необходимо подключение к сети(2)</string>
+    <string name="reload">Перезагрузить</string>
+    <string name="no_matches">Результатов нет</string>
 </resources>
