@@ -35,10 +35,8 @@ public class App extends Application {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setInstanceFollowRedirects(false);
             conn.setRequestMethod("GET");
-            conn.setDoInput(false);
-            conn.setDoOutput(false);
+            conn.setConnectTimeout(10000);
             conn.connect();
-            Log.d("inetProbe", String.valueOf(conn.getResponseCode()));
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK)
                 return true;
         } catch (Exception e) {

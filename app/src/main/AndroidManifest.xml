@@ -20,12 +20,12 @@
         <activity
             android:name=".PlugActivity"
             android:exported="true"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity
             android:name=".WebViewActivity"
             android:exported="true"
             android:launchMode="singleTask"
-            android:usesCleartextTraffic="true"></activity>
+            android:usesCleartextTraffic="true" />
         <activity
             android:name=".BlankActivity"
             android:exported="true"
