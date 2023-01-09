@@ -29,7 +29,7 @@
             android:id="@+id/error_details"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/exception_text_example"
+            android:text="@string/lorem_ipsum"
             android:textAlignment="center"
             android:textColor="#AE9D35"
             android:textSize="21sp" />

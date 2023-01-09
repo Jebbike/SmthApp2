@@ -121,7 +121,7 @@ public class BlankActivity extends AppCompatActivity {
         } else {
             intent = new Intent(BlankActivity.this, WebViewActivity.class);
             Log.d(TAG, "web view");
-            intent.putExtra("url", "https://lichess.org/");
+            intent.putExtra("url", url);
         }
 
         startActivity(intent);
