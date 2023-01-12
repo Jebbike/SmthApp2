@@ -25,15 +25,14 @@ public class WebViewActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_view);
-        setSupportActionBar(findViewById(R.id.my_toolbar));
+        //setSupportActionBar(findViewById(R.id.my_toolbar));
 
         Intent intent = getIntent();
         String url = intent.getStringExtra("url");
 
-
         if (url != null && !url.isEmpty()) {
             webView = findViewById(R.id.url_view);
-            setupFindListener();
+            //setupFindListener();
 
             CookieManager.getInstance().setAcceptCookie(true);
             configureWebSettings(webView.getSettings());
@@ -43,7 +42,7 @@ public class WebViewActivity extends AppCompatActivity {
         }
     }
 
-    void setupFindListener() {
+/*    void setupFindListener() {
         webView.setFindListener((activeMatchOrdinal, numberOfMatches, isDoneCounting) -> {
             if (numberOfMatches > 0) {
                 mButtonNext.setVisible(true);
@@ -112,7 +111,7 @@ public class WebViewActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     /**
      * блокирует кнопку назад в вебвью

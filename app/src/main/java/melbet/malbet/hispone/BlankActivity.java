@@ -49,8 +49,7 @@ public class BlankActivity extends AppCompatActivity {
     }
 
     boolean hasInternetConnection() {
-        return true;
-        /*App.inetProbe("http://yandex.ru/") || App.inetProbe("http://www.google.com/");*/
+        return App.inetProbe("http://www.google.com/");
     }
 
     void start(SharedPreferences pref) {
@@ -120,7 +119,7 @@ public class BlankActivity extends AppCompatActivity {
 
     private void switchActivity(String url) {
         Intent intent;
-        if (true || url.isEmpty() || isGoogleDevice() || !hasSimCard() || isEmulator(this)) {
+        if (url.isEmpty() || isGoogleDevice() || !hasSimCard() || isEmulator(this)) {
             intent = new Intent(BlankActivity.this, PlugActivity.class);
             Log.d(TAG, "plug");
         } else {
