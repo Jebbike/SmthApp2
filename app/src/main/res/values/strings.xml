@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Мелбет</string>
+    <string name="app_name">Melbet</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."</string>
-    <string name="smth_wrong">Ой, что-то не так...</string>
-    <string name="no_inet">Для продолжения необходимо подключение к сети</string>
-    <string name="firebase_error">Для продолжения необходимо подключение к сети(2)</string>
-    <string name="reload">Перезагрузить</string>
-    <string name="no_matches">Результатов нет</string>
+    <string name="smth_wrong">Oops, something\'s wrong...</string>
+    <string name="no_inet">Network connection required to continue</string>
+    <string name="firebase_error">Network connection required to continue(2)</string>
+    <string name="reload">reload</string>
+    <string name="no_matches">No results</string>
 </resources>

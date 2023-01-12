@@ -1,13 +1,21 @@
 package melbet.malbet.hispone;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,17 +30,26 @@ public class PlugActivity extends AppCompatActivity {
 
         setContentView(R.layout.plug_layout);
 
-        List<Info> itemsArrayList = generateInfoList(20, 3, 5, 2);
+        //generateDemoInfoList(20, 3, 5, 2);
+        List<Info> itemsArrayList = parseNews();
 
         ListView itemsListView = findViewById(R.id.factsList);
 
         InfoListAdapter adapter = new InfoListAdapter(PlugActivity.this, itemsArrayList);
         itemsListView.setAdapter(adapter);
-
     }
 
-    private List<Info> generateInfoList(int size, int extraSizeCount, int extraDash, int dash) {
-        if(size == 0)
+    private List<Info> parseNews() {
+        try {
+            return NewsParser.parse(getAssets().open("default_news.xml"));
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
+    private List<Info> generateDemoInfoList(int size, int extraSizeCount, int extraDash, int dash) {
+        if (size == 0)
             return new ArrayList<>();
 
         List<Info> infoList = new ArrayList<>();

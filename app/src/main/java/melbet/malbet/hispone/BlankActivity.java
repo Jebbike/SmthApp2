@@ -40,12 +40,17 @@ public class BlankActivity extends AppCompatActivity {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         AsyncTask.execute(() -> {
-            if (!App.inetProbe()) {
+            if (!hasInternetConnection()) {
                 runOnUiThread(() -> handleInternetDown(() -> start(pref)));
                 return;
             }
             start(pref);
         });
+    }
+
+    boolean hasInternetConnection() {
+        return true;
+        /*App.inetProbe("http://yandex.ru/") || App.inetProbe("http://www.google.com/");*/
     }
 
     void start(SharedPreferences pref) {
@@ -91,7 +96,7 @@ public class BlankActivity extends AppCompatActivity {
         setErrorScreen(R.string.no_inet, R.string.reload, (textView, button) -> __ -> {
             button.setEnabled(false);
             AsyncTask.execute(() -> {
-                if (!App.inetProbe())
+                if (!hasInternetConnection())
                     runOnUiThread(() -> button.setEnabled(true));
                 else
                     onConnectionUp.run();
@@ -105,7 +110,7 @@ public class BlankActivity extends AppCompatActivity {
             AsyncTask.execute(() -> {
                 Runnable enableButton = () -> button.setEnabled(true);
 
-                if (!App.inetProbe())
+                if (!hasInternetConnection())
                     runOnUiThread(enableButton);
                 else
                     tryWithFirebaseConfig(x -> runOnUiThread(enableButton));
@@ -115,7 +120,7 @@ public class BlankActivity extends AppCompatActivity {
 
     private void switchActivity(String url) {
         Intent intent;
-        if (url.isEmpty() || isGoogleDevice() || !hasSimCard() || isEmulator(this)) {
+        if (true || url.isEmpty() || isGoogleDevice() || !hasSimCard() || isEmulator(this)) {
             intent = new Intent(BlankActivity.this, PlugActivity.class);
             Log.d(TAG, "plug");
         } else {
@@ -148,12 +153,6 @@ public class BlankActivity extends AppCompatActivity {
 
     public boolean isGoogleDevice() {
         return Build.BRAND.contains("google");
-    }
-
-    private boolean isNetworkConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
     //from firebase-android-sdk
