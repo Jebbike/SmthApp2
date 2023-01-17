@@ -9,8 +9,8 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.StringReader;
-import java.util.Arrays;
+
+import melbet.malbet.hispone.plug.NewsParser;
 
 /**
  * Example local unit test, which will execute on the development machine (host).

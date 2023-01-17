@@ -1,4 +1,4 @@
-package melbet.malbet.hispone;
+package melbet.malbet.hispone.plug;
 
 import android.util.Xml;
 

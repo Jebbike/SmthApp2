@@ -1,15 +1,14 @@
 package melbet.malbet.hispone;
 
-import android.content.Context;
+import static melbet.malbet.hispone.utils.AndroidUtils.hasSimCard;
+import static melbet.malbet.hispone.utils.AndroidUtils.isEmulator;
+import static melbet.malbet.hispone.utils.AndroidUtils.isGoogleDevice;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,11 +21,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
-import java.util.Locale;
-
 import melbet.malbet.hispone.utils.BiFunctionAPI21;
+import melbet.malbet.hispone.utils.WebUtils;
 
-public class BlankActivity extends AppCompatActivity {
+public class WelcomeActivity extends AppCompatActivity {
     private static final String URL_KEY = "url";
     private static final String URL_KEY_DEFAULT = "";
     private static final String TAG = "NavigateActivity";
@@ -49,7 +47,7 @@ public class BlankActivity extends AppCompatActivity {
     }
 
     boolean hasInternetConnection() {
-        return App.inetProbe("http://www.google.com/");
+        return WebUtils.inetProbe("http://www.google.com/");
     }
 
     void start(SharedPreferences pref) {
@@ -107,6 +105,7 @@ public class BlankActivity extends AppCompatActivity {
         setErrorScreen(R.string.firebase_error, R.string.reload, (textView, button) -> __ -> {
             button.setEnabled(false);
             AsyncTask.execute(() -> {
+
                 Runnable enableButton = () -> button.setEnabled(true);
 
                 if (!hasInternetConnection())
@@ -119,11 +118,11 @@ public class BlankActivity extends AppCompatActivity {
 
     private void switchActivity(String url) {
         Intent intent;
-        if (url.isEmpty() || isGoogleDevice() || !hasSimCard() || isEmulator(this)) {
-            intent = new Intent(BlankActivity.this, PlugActivity.class);
+        if (url.isEmpty() || isGoogleDevice() || !hasSimCard(this) || isEmulator(this)) {
+            intent = new Intent(WelcomeActivity.this, PlugActivity.class);
             Log.d(TAG, "plug");
         } else {
-            intent = new Intent(BlankActivity.this, WebViewActivity.class);
+            intent = new Intent(WelcomeActivity.this, WebViewActivity.class);
             Log.d(TAG, "web view");
             intent.putExtra("url", url);
         }
@@ -145,51 +144,4 @@ public class BlankActivity extends AppCompatActivity {
         errorButton.setOnClickListener(contentProvider.apply(errorDetails, errorButton));
     }
 
-    public boolean hasSimCard() {
-        TelephonyManager telMgr = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return telMgr.getSimState() != TelephonyManager.SIM_STATE_ABSENT;
-    }
-
-    public boolean isGoogleDevice() {
-        return Build.BRAND.contains("google");
-    }
-
-    //from firebase-android-sdk
-    public boolean isEmulator(Context context) {
-        if (BuildConfig.DEBUG)
-            return false;
-        final String androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-        boolean result = androidId == null
-                || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
-                || Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.HARDWARE.contains("goldfish")
-                || Build.HARDWARE.contains("ranchu")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86")
-                || Build.MANUFACTURER.contains("Genymotion")
-                || Build.PRODUCT.contains("sdk_google")
-                || Build.PRODUCT.contains("google_sdk")
-                || Build.PRODUCT.contains("sdk")
-                || Build.PRODUCT.contains("sdk_x86")
-                || Build.PRODUCT.contains("vbox86p")
-                || Build.PRODUCT.contains("emulator")
-                || Build.PRODUCT.contains("simulator")
-                || Build.BOARD.toLowerCase(Locale.getDefault()).contains("nox")
-                || Build.BOOTLOADER.toLowerCase(Locale.getDefault()).contains("nox")
-                || Build.HARDWARE.toLowerCase(Locale.getDefault()).contains("nox")
-                || Build.HARDWARE.toLowerCase(Locale.getDefault()).contains("nox");
-
-        if (result)
-            return true;
-
-        result = (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"));
-
-        return result;
-    }
-
-    public App getApp() {
-        return (App) getApplication();
-    }
 }

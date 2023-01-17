@@ -38,8 +38,18 @@ public class WebViewActivity extends AppCompatActivity {
             configureWebSettings(webView.getSettings());
 
             webView.setWebViewClient(new WebViewClient());
-            webView.loadUrl(url);
+
+            if (savedInstanceState != null)
+                webView.restoreState(savedInstanceState);
+            else
+                webView.loadUrl(url);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        webView.saveState(outState);
+        super.onSaveInstanceState(outState);
     }
 
 /*    void setupFindListener() {
