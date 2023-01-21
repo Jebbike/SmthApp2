@@ -12,30 +12,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="@string/header_placeholder"
+        android:text="2/16 Что это за команда?"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="26sp"
         android:textStyle="bold" />
 
     <ImageView
-        android:padding="20dp"
         android:id="@+id/item_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/fowier"
+        android:layout_above="@id/time"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentEnd="false"
         android:layout_gravity="center"
-        android:src="@drawable/ic_launcher_background" />
+        android:src="@drawable/fakel__1_" />
 
 
     <GridView
+        android:animationCache="false"
         android:id="@+id/answerButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/item_icon"
         android:layout_above="@id/time"
-        android:layout_below="@id/item_icon"
+        android:layout_below="@id/fowier"
         android:numColumns="2"
         android:gravity="center"
         android:stretchMode="columnWidth"
@@ -63,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@drawable/stroked_btn"
-        android:text="@string/next_command"
+        android:text="Следующая команда"
         android:textAlignment="center"
         android:textColor="@color/green"
         android:textSize="16sp" />

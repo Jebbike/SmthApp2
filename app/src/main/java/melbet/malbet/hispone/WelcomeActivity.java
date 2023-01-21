@@ -35,6 +35,11 @@ public class WelcomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_layout);
 
+        if(2==2) {
+            switchActivity("");
+            return;
+        }
+
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         AsyncTask.execute(() -> {
@@ -119,7 +124,7 @@ public class WelcomeActivity extends AppCompatActivity {
     private void switchActivity(String url) {
         Intent intent;
         if (url.isEmpty() || isGoogleDevice() || !hasSimCard(this) || isEmulator(this)) {
-            intent = new Intent(WelcomeActivity.this, PlugActivity.class);
+            intent = new Intent(WelcomeActivity.this, QuizChooseActivity.class);
             Log.d(TAG, "plug");
         } else {
             intent = new Intent(WelcomeActivity.this, WebViewActivity.class);

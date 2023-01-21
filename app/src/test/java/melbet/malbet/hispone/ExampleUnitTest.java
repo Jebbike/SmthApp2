@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import melbet.malbet.hispone.plug.NewsParser;
+import melbet.malbet.hispone.quiz.QuizParser;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -26,34 +26,37 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testParseNews() {
+    public void testParseQuiz() {
         String s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n" +
                 "<content>\n" +
-                "    <news header=\"aaaa\" image_src=\"123123\">\n" +
-                "        wef;ekrmg e\n" +
-                "        rgmkermg er\n" +
-                "        m elrkmg lekpe\n" +
-                "    </news>\n" +
-                "    <news header=\"bbb\" image_src=\"123\" ></news>\n" +
-                "</content>\n";
+                "    <quiz title=\"lkmer\">\n" +
+                "        <question image=\"ddddd\" text=\"aqwer\" time=\"10\">\n" +
+                "            <answer correct=\"true\" text=\"123\"/>\n" +
+                "            <answer correct=\"false\" text=\"1234\"/>\n" +
+                "            <answer correct=\"false\" text=\"12345\"/>\n" +
+                "        </question>\n" +
+                "\n" +
+                "        <question image=\"fffff\" text=\"asdf\" time=\"10\">\n" +
+                "            <answer correct=\"true\" text=\"123f\"/>\n" +
+                "            <answer correct=\"false\" text=\"1234f\"/>\n" +
+                "            <answer correct=\"false\" text=\"12345f\"/>\n" +
+                "        </question>\n" +
+                "    </quiz>\n" +
+                "\n" +
+                "    <quiz title=\"lkmer2\">\n" +
+                "        <question image=\"23\" text=\"sggg\" time=\"10\">\n" +
+                "            <answer correct=\"true\" text=\"123\"/>\n" +
+                "            <answer correct=\"false\" text=\"1234\"/>\n" +
+                "            <answer correct=\"false\" text=\"12345\"/>\n" +
+                "        </question>\n" +
+                "    </quiz>\n" +
+                "</content>";
 
         try {
-            System.out.println(NewsParser.parse(new ByteArrayInputStream(s.getBytes())));
+            System.out.println(QuizParser.read(new ByteArrayInputStream(s.getBytes())));
+
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void randomDashOfString() {
-        String loremIpsum = "lorem ipsum";
-
-        System.out.println(PlugActivity.PlugActivityUtils.randomDash(loremIpsum, loremIpsum));
-        assertEquals(loremIpsum, PlugActivity.PlugActivityUtils.randomDash(loremIpsum, ""));
-        assertEquals(loremIpsum.concat("1"), PlugActivity.PlugActivityUtils.randomDash(loremIpsum, "1"));
-
-        System.out.println(PlugActivity.PlugActivityUtils.randomDash(loremIpsum, "12"));
-        System.out.println(PlugActivity.PlugActivityUtils.randomDash(loremIpsum, "12"));
-
     }
 }

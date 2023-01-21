@@ -23,4 +23,5 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("melbet.malbet.hispone", appContext.getPackageName());
     }
+
 }

@@ -1,94 +1,227 @@
 package melbet.malbet.hispone;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.widget.ListView;
+import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
 
-import melbet.malbet.hispone.plug.Info;
-import melbet.malbet.hispone.plug.InfoListAdapter;
-import melbet.malbet.hispone.plug.NewsParser;
+import melbet.malbet.hispone.quiz.Answer;
+import melbet.malbet.hispone.quiz.AnswerListAdapter;
+import melbet.malbet.hispone.quiz.Question;
+import melbet.malbet.hispone.quiz.Quiz;
 
 public class PlugActivity extends AppCompatActivity {
+
+    Quiz quiz;
+    List<Answer> currentAnswers = new ArrayList<>();
+    AnswerListAdapter adapter;
+
+    GridView answersGrid;
+    Button nextQuestionBtn;
+    TextView questionTimerTextView;
+    CountDownTimer questionTimer;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.plug_layout);
+        quiz = (Quiz) getIntent().getSerializableExtra(QuizChooseActivity.QUIZ_EXTRA);
+        if (quiz == null)
+            return;
 
-        //generateDemoInfoList(20, 3, 5, 2);
-        List<Info> itemsArrayList = parseNews();
 
-        ListView itemsListView = findViewById(R.id.factsList);
-
-        InfoListAdapter adapter = new InfoListAdapter(PlugActivity.this, itemsArrayList);
-        itemsListView.setAdapter(adapter);
+        startQuiz(quiz);
     }
 
-    private List<Info> parseNews() {
+    void startQuiz(Quiz quiz) {
+        setContentView(R.layout.center_text_view);
+        TextView textView = findViewById(R.id.center_text_view_content);
+
+        CountDownTimer countDownTimer = new CountDownTimer(4000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                textView.setText(String.valueOf((int) (millisUntilFinished / 1000)));
+            }
+
+            @Override
+            public void onFinish() {
+                setContentView(R.layout.plug_layout);
+
+                adapter = new AnswerListAdapter(PlugActivity.this, currentAnswers);
+                answersGrid = findViewById(R.id.answerButtons);
+                nextQuestionBtn = findViewById(R.id.plug_next);
+                answersGrid.setAdapter(adapter);
+                questionTimerTextView = findViewById(R.id.time);
+
+                nextQuestionBtn.setOnClickListener(x -> {
+                    if (quiz.hasQuestions()) {
+                        quiz.nextQuestion();
+                        startQuestion(quiz.getCurrentQuestion());
+                    } else {
+                        Intent intent = new Intent(PlugActivity.this, QuizChooseActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+
+                answersGrid.setOnItemClickListener((parent, v, position, id) -> {
+                    Answer answer = (Answer) v.getTag(R.string.TAG_ANSWER_ID);
+                    quiz.answer(quiz.getCurrentQuestion().getId(), answer.getId());
+                    saveScore(quiz);
+                    closeGame();
+                });
+
+                startQuestion(quiz.getCurrentQuestion());
+            }
+        };
+        countDownTimer.start();
+    }
+
+    public void openGame() {
+        nextQuestionBtn.setEnabled(false);
+        answersGrid.setEnabled(true);
+
+        for (int i = 0; i < answersGrid.getChildCount(); i++) {
+            View child = answersGrid.getChildAt(i);
+
+            child.setBackgroundColor(Color.WHITE);
+            ((TextView) child.findViewById(R.id.grid_item_title))
+                    .setTextColor(getApplicationContext().getResources().getColor(R.color.green));
+        }
+    }
+
+    public void closeGame() {
+        questionTimer.cancel();
+        nextQuestionBtn.setEnabled(true);
+        answersGrid.setEnabled(false);
+
+        for (int i = 0; i < answersGrid.getChildCount(); i++) {
+            View child = answersGrid.getChildAt(i);
+            ((TextView) child.findViewById(R.id.grid_item_title)).setTextColor(Color.WHITE);
+
+            Answer ans = (Answer) child.getTag(R.string.TAG_ANSWER_ID);
+            int color = Color.RED;
+            if (ans.isCorrect())
+                color = getApplicationContext().getResources().getColor(R.color.green);
+
+            child.setBackgroundColor(color);
+        }
+
+        if (!quiz.hasQuestions()) {
+            nextQuestionBtn.setText(R.string.finish_game);
+        }
+
+        ImageView image = findViewById(R.id.item_icon);
+        Drawable drawableFromAssets = getDrawableFromAssets(quiz.getCurrentQuestion().getImage());
+
+        image.setImageDrawable(drawableFromAssets);
+    }
+
+
+    public Bitmap blurredImage(Question question) {
+        Drawable drawableFromAssets = getDrawableFromAssets(question.getImage());
+        if (drawableFromAssets == null)
+            return null;
+
+
+        Bitmap bitmap = ((BitmapDrawable) drawableFromAssets).getBitmap();
+        return blur(bitmap);
+    }
+
+    public void startQuestion(Question question) {
+        currentAnswers.clear();
+        currentAnswers.addAll(question.getPossibleAnswers());
+        adapter.notifyDataSetChanged();
+        openGame();
+
+        TextView header = findViewById(R.id.fowier);
+        ImageView image = findViewById(R.id.item_icon);
+
+
+        image.setImageBitmap(blurredImage(question));
+
+
+        String text = this.getApplicationContext().getResources().getText(R.string.header_placeholder).toString();
+        text = text
+                .replace("%a", String.valueOf(quiz.getQuestionIndex() + 1))
+                .replace("%b", String.valueOf(quiz.getQuestions().size()));
+
+        header.setText(text);
+
+
+        questionTimer = new CountDownTimer(question.getResponseTime() * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                questionTimerTextView.setText(String.valueOf((int) (millisUntilFinished / 1000)));
+            }
+
+            @Override
+            public void onFinish() {
+                closeGame();
+            }
+        };
+        questionTimer.start();
+    }
+
+    public Bitmap blur(Bitmap image) {
+        if (null == image) return null;
+
+        Bitmap outputBitmap = Bitmap.createBitmap(image);
+        final RenderScript renderScript = RenderScript.create(this);
+        Allocation tmpIn = Allocation.createFromBitmap(renderScript, image);
+        Allocation tmpOut = Allocation.createFromBitmap(renderScript, outputBitmap);
+
+        //Intrinsic Gausian blur filter
+        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(renderScript, Element.U8_4(renderScript));
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+        return outputBitmap;
+    }
+
+    public Drawable getDrawableFromAssets(String fileName) {
         try {
-            return NewsParser.parse(getAssets().open("default_news.xml"));
-        } catch (XmlPullParserException | IOException e) {
-            e.printStackTrace();
+            InputStream ims = getApplicationContext().getAssets().open(fileName);
+            return Drawable.createFromStream(ims, null);
+        } catch (Exception ex) {
+            Log.d("PlugActivity", "Error: ", ex);
+            return null;
         }
-        return new ArrayList<>();
     }
 
-    private List<Info> generateDemoInfoList(int size, int extraSizeCount, int extraDash, int dash) {
-        if (size == 0)
-            return new ArrayList<>();
+    public void saveScore(Quiz quiz) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String quizPrefKey = QuizChooseActivity.getQuizPrefKey(quiz);
 
-        List<Info> infoList = new ArrayList<>();
-
-        String content = getResources().getString(R.string.lorem_ipsum);
-        if (content == null) {
-            content = "nullable content";
+        if (pref.getInt(quizPrefKey, 0) < quiz.getScore()) {
+            pref.edit().putInt(quizPrefKey, quiz.getScore()).apply();
+            Log.d("QuizLog", "saved score = " + quiz.getScore());
         }
-
-        for (int i = 0; i < extraSizeCount; i++) {
-            infoList.add(createRandomInfo(content, extraDash));
-        }
-
-        for (int i = 0; i < size; i++) {
-            infoList.add(createRandomInfo(content, dash));
-        }
-
-        return infoList;
     }
 
-    Info createRandomInfo(String content, int detailDashCount) {
-        String details = "";
-
-        for (int i = 0; i < detailDashCount; i++) {
-            details = details.concat(PlugActivityUtils.randomDash(content, content));
-        }
-
-        return new Info("lorem ipsum", details);
-    }
-
-    @VisibleForTesting
-    static class PlugActivityUtils {
-        @VisibleForTesting
-        static String randomDash(String source, String from) {
-            if (from.isEmpty())
-                return source;
-            if (from.length() == 1)
-                return source.concat(from);
-
-            int a = ThreadLocalRandom.current().nextInt(0, from.length());
-            if (a == 0)
-                a = 2;
-
-            return source.concat(from.substring(0, Math.min(from.length(), a)));
-        }
+    @Override
+    public void onBackPressed() {
     }
 }

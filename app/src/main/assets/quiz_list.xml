@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<content>
+    <quiz title="Russia: Premier League">
+        <question image="images/img.png" text="" time="10">
+            <answer correct="true" text="Sochi" />
+            <answer correct="false" text="Wings of Soviets" />
+            <answer correct="false" text="Locomotive" />
+            <answer correct="false" text="Pari NN" />
+        </question>
+
+        <question image="images/img_1.png" text="" time="16">
+            <answer correct="true" text="Akhmat" />
+            <answer correct="false" text="Orenburg" />
+            <answer correct="false" text="CSKA" />
+            <answer correct="false" text="Dynamo" />
+        </question>
+
+        <question image="images/img_2.png" text="" time="16">
+            <answer correct="false" text="Rostov" />
+            <answer correct="false" text="Spartacus" />
+            <answer correct="false" text="Locomotive" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+            <answer correct="true" text="Torpedo" />
+        </question>
+
+        <question image="images/img_3.png" text="" time="16">
+            <answer correct="true" text="Dynamo" />
+            <answer correct="false" text="Orenburg" />
+            <answer correct="false" text="Fakel" />
+            <answer correct="false" text="Ural" />
+        </question>
+    </quiz>
+
+    <quiz title="England: Premier League">
+        <question image="images/img2.png" text="" time="11">
+            <answer correct="true" text="true answer" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+        </question>
+    </quiz>
+
+    <quiz title="Spain: Premier League">
+        <question image="images/img_3.png" text="" time="14">
+            <answer correct="true" text="true answer" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+        </question>
+    </quiz>
+
+    <quiz title="Portugal: Premier League">
+        <question image="images/img_4.png" text="" time="19">
+            <answer correct="true" text="true answer" />
+            <answer correct="false" text="false" />
+            <answer correct="false" text="false" />
+        </question>
+    </quiz>
+</content>
