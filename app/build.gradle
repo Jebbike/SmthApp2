@@ -1,14 +1,14 @@
 plugins {
-    id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.android.application'
 }
 
 android {
-    namespace 'melbet.malbet.hispone'
+    namespace 'bilyoner.vionter'
     compileSdk 32
 
     defaultConfig {
-        applicationId "melbet.malbet.hispone"
+        applicationId "bilyoner.vionter"
         minSdk 21
         targetSdk 32
         versionCode 1
